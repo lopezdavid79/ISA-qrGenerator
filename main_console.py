@@ -12,8 +12,8 @@ qr = Qr(site , name , scale,qrFormat)
 
 qrcd = qr.generate_qr() 
 
-if qrFormat=="svg":	
+if qrFormat=="svg":
 	qr.save(qrcd)
 elif qrFormat== "png":
-	qr.save(qrcd)
+	qr.save_png(qrcd)
 print("Generando qr")
