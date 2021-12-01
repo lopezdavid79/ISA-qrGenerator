@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
+from pathlib import Path
 import os
 from models.qr import Qr
 from funciones import scale
@@ -24,6 +25,11 @@ class Principal(wx.Frame):
 		wx.Frame.__init__(self, *args, **kwds)
 		self.scale = scale()
 		self.qrFormat = ["svg" , "png"]
+#usuario de windows y Documents
+		self.path_dir = Path(Path.home(),"Documents","ISA_qrGenerator")
+		
+		print(self.path_dir)
+
 		self.SetSize((400, 300))
 		self.SetTitle(_("ISA QrGenerator 0.1"))
 
@@ -55,14 +61,15 @@ class Principal(wx.Frame):
 
 		self.cb_format = wx.ComboBox(self.panel_1, wx.ID_ANY, choices= self.qrFormat, style=wx.CB_DROPDOWN)
 		sz_principal.Add(self.cb_format, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
-
-		self.chk_directorio = wx.CheckListBox(self.panel_1, wx.ID_ANY, choices=[_(u"ubicación por defecto")])
-		self.chk_directorio.SetSelection(0)
-		sz_principal.Add(self.chk_directorio, 0, wx.EXPAND, 0)
+		pathDir=str(self.path_dir)
+		# self.chk_directorio = wx.CheckBox(self.panel_1, wx.ID_ANY, self.path_dir)
+		# self.chk_directorio = wx.CheckListBox(self.panel_1, wx.ID_ANY, choices=[("elija carpeta de destino"),(self.path_dir)])
+		# self.chk_directorio.SetSelection(0)
+		# sz_principal.Add(self.chk_directorio, 0, wx.EXPAND, 0)
 
 		sz_botones = wx.BoxSizer(wx.HORIZONTAL)
 		sz_principal.Add(sz_botones, 1, wx.EXPAND, 0)
-
+		
 		self.btn_generar = wx.Button(self.panel_1, wx.ID_ANY, _("Generar&G "))
 		sz_botones.Add(self.btn_generar, 0, wx.BOTTOM, 0)
 
@@ -73,13 +80,13 @@ class Principal(wx.Frame):
 
 		self.Layout()
 		self.Centre()
+		# self.Bind(wx.EVT_CHECKBOX, self.folder)
 		self.btn_generar.Bind(wx.EVT_BUTTON,self.generar)
 		self.btn_abrir.Bind(wx.EVT_BUTTON,self.download)
-		self.chk_directorio.Bind(wx.EVT_BUTTON,self.folder)
+		# self.chk_directorio.Bind(wx.EVT_BUTTON,self.folder)
 
-	def download(self , event):
-		path="C:/Users\david\Downloads"
-		os.system(f'start {os.path.realpath(path)}')
+
+	
 
 
 	def generar(self , event):
@@ -88,25 +95,47 @@ class Principal(wx.Frame):
 		name= self.txt_name.GetValue()
 		scale = self.cb_scale.GetValue()
 		qrFormat = self.cb_format.GetValue()
-		print(qrFormat)
-		qr = Qr(site , name , scale,qrFormat)
+		if  not os.path.exists(self.path_dir):
+			os.makedirs(self.path_dir)
+			path = self.path_dir
+		else:
+
+			path=self.path_dir
+
+		qr = Qr(site , name , scale,qrFormat,path)
 		
 		qrcd = qr.generate_qr() 
 		if qrFormat=="svg":
 			qr.save(qrcd)
 		elif qrFormat=="png":
 			qr.save_png(qrcd)
-		print("qr generado")
+
+		dialogo = wx.MessageDialog(self, 'Desea abrir la carpeta donde se  generó', 'confirmar', wx.YES_NO | wx.NO_DEFAULT)
+		if dialogo.ShowModal() == wx.ID_YES:
+			downloads(self)
+			print("abrir carpeta")
+
 
 
 	def folder(self , event):
 		dlgFol = wx.DirDialog(self, "seleccione carpeta")
 		if dlgFol.ShowModal() == wx.ID_OK:
-			self.pathDir= dlgFol.GetPath()
-			self.name.SetValue(self.pathDir)
+			self.path_dir= dlgFol.GetPath()
+			self.chk_directorio.SetValue(self.path_dir)
 		dlgFol.Destroy
 
-		print("anda")
+#
+	def download(self , event):
+		path=self.path_dir
+		os.system(f'start {os.path.realpath(path)}')
+
+
+	
+def downloads(self ):
+		path=self.path_dir
+		os.system(f'start {os.path.realpath(path)}')
+
+	
 		# end wxGlade
 
 

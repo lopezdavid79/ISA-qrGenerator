@@ -4,11 +4,13 @@ import png
 
 
 class Qr():
-	def __init__(self , site ,name ,scale,qrFormat):
+	def __init__(self , site ,name ,scale,qrFormat,path):
 		self.site = site
 		self.name = name
 		self.scale =scale
 		self.qrFormat=qrFormat
+		# self.path="C:/Users\david\Downloads/"
+		self.path = path
 
 	def __str__(self):
 		return f"{self.site}"
@@ -17,7 +19,7 @@ class Qr():
 		return  pyqrcode.create(self.site) 
 
 	def save(self , qrcd):
-		return qrcd.svg(self.name+".svg", scale = self.scale)    
+		return qrcd.svg(Path(self.path,self.name+".svg"), scale = self.scale)    
 
 	def save_png(self , qrcd):
-		return qrcd.png(self.name+".png", scale = self.scale)    
+		return qrcd.png(Path(self.path,self.name+".png"), scale = self.scale)    
