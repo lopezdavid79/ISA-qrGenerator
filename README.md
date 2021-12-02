@@ -1,2 +1,4 @@
 # ISA-qrGeneratorv
-generador de Qr realizado en python
+generador de Qr desarrollado en python
+por David lópez
+    

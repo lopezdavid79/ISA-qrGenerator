@@ -27,8 +27,8 @@ class Principal(wx.Frame):
 		self.qrFormat = ["svg" , "png"]
 #usuario de windows y Documents
 		self.path_dir = Path(Path.home(),"Documents","ISA_qrGenerator")
-		
-		print(self.path_dir)
+
+
 
 		self.SetSize((400, 300))
 		self.SetTitle(_("ISA QrGenerator 0.1"))
@@ -43,7 +43,7 @@ class Principal(wx.Frame):
 		self.txt_site = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
 		sz_principal.Add(self.txt_site, 0, 0, 0)
 
-		lb_name = wx.StaticText(self.panel_1, wx.ID_ANY, _("nombre"))
+		lb_name = wx.StaticText(self.panel_1, wx.ID_ANY, _("nombre del archivo salida"))
 		sz_principal.Add(lb_name, 0, wx.EXPAND, 0)
 
 		self.txt_name = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
@@ -54,14 +54,14 @@ class Principal(wx.Frame):
 
 		self.cb_scale = wx.ComboBox(self.panel_1, wx.ID_ANY, choices= self.scale, style=wx.CB_DROPDOWN)
 		sz_principal.Add(self.cb_scale, 0, 0, 0)
-
+		self.cb_scale.SetSelection(0)
 
 		lb_formato = wx.StaticText(self.panel_1, wx.ID_ANY, _("formato"))
 		sz_principal.Add(lb_formato, 0, wx.EXPAND, 0)
 
 		self.cb_format = wx.ComboBox(self.panel_1, wx.ID_ANY, choices= self.qrFormat, style=wx.CB_DROPDOWN)
 		sz_principal.Add(self.cb_format, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
-		pathDir=str(self.path_dir)
+		self.cb_format.SetSelection(0)
 		# self.chk_directorio = wx.CheckBox(self.panel_1, wx.ID_ANY, self.path_dir)
 		# self.chk_directorio = wx.CheckListBox(self.panel_1, wx.ID_ANY, choices=[("elija carpeta de destino"),(self.path_dir)])
 		# self.chk_directorio.SetSelection(0)
@@ -101,19 +101,20 @@ class Principal(wx.Frame):
 		else:
 
 			path=self.path_dir
-
-		qr = Qr(site , name , scale,qrFormat,path)
+		if site and name != "": 
+			qr = Qr(site , name , scale,qrFormat,path)
 		
-		qrcd = qr.generate_qr() 
-		if qrFormat=="svg":
-			qr.save(qrcd)
-		elif qrFormat=="png":
-			qr.save_png(qrcd)
-
-		dialogo = wx.MessageDialog(self, 'Desea abrir la carpeta donde se  generó', 'confirmar', wx.YES_NO | wx.NO_DEFAULT)
-		if dialogo.ShowModal() == wx.ID_YES:
-			downloads(self)
-			print("abrir carpeta")
+			qrcd = qr.generate_qr() 
+			if qrFormat=="svg":
+				qr.save(qrcd)
+			elif qrFormat=="png":
+				qr.save_png(qrcd)
+			dialogo = wx.MessageDialog(self, 'QR Generado exitosamente!.Desea abrir la carpeta donde se  generó', 'confirmar', wx.YES_NO | wx.NO_DEFAULT)
+			if dialogo.ShowModal() == wx.ID_YES:
+				downloads(self)
+		else:
+			error=wx.MessageDialog(self, "los campos no se pueden dejar bacíos.", "error")
+			error.ShowModal()
 
 
 
