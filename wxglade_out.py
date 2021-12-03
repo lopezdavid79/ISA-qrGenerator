@@ -111,7 +111,7 @@ class Principal(wx.Frame):
 				qr.save_png(qrcd)
 			dialogo = wx.MessageDialog(self, 'QR Generado exitosamente!.Desea abrir la carpeta donde se  generó', 'confirmar', wx.YES_NO | wx.NO_DEFAULT)
 			if dialogo.ShowModal() == wx.ID_YES:
-				downloads(self)
+				self.download()
 		else:
 			error=wx.MessageDialog(self, "los campos no se pueden dejar bacíos.", "error")
 			error.ShowModal()
@@ -125,23 +125,16 @@ class Principal(wx.Frame):
 			self.chk_directorio.SetValue(self.path_dir)
 		dlgFol.Destroy
 
-#
-	def download(self , event):
+
+	def download(self , *args, **kwargs):
 		path=self.path_dir
 		os.system(f'start {os.path.realpath(path)}')
 
 
-	
-def downloads(self ):
-		path=self.path_dir
-		os.system(f'start {os.path.realpath(path)}')
 
-	
 		# end wxGlade
 
 
-
-# end of class Principal
 
 class MyApp(wx.App):
 	def OnInit(self):
