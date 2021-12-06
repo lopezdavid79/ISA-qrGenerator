@@ -10,8 +10,6 @@ from funciones import scale
 
 import wx
 
-# begin wxGlade: dependencies
-import gettext
 # end wxGlade
 
 # begin wxGlade: extracode
@@ -30,57 +28,56 @@ class Principal(wx.Frame):
 
 
 
-		self.SetSize((400, 300))
-		self.SetTitle(_("ISA QrGenerator 0.1"))
+		self.SetSize((800, 600))
+		self.SetTitle("ISA QrGenerator 0.1")
 
 		self.panel_1 = wx.Panel(self, wx.ID_ANY)
 
 		sz_principal = wx.BoxSizer(wx.VERTICAL)
 
-		lb_site = wx.StaticText(self.panel_1, wx.ID_ANY, _("ingrese web&w"))
+		lb_site = wx.StaticText(self.panel_1, wx.ID_ANY, "ingrese web&w")
 		sz_principal.Add(lb_site, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
 
 		self.txt_site = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
 		sz_principal.Add(self.txt_site, 0, 0, 0)
 
-		lb_name = wx.StaticText(self.panel_1, wx.ID_ANY, _("nombre del archivo salida"))
+		lb_name = wx.StaticText(self.panel_1, wx.ID_ANY, "nombre")
 		sz_principal.Add(lb_name, 0, wx.EXPAND, 0)
 
 		self.txt_name = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
 		sz_principal.Add(self.txt_name, 0, wx.EXPAND, 0)
 
-		lb_scale = wx.StaticText(self.panel_1, wx.ID_ANY, _("Escala"))
+		lb_scale = wx.StaticText(self.panel_1, wx.ID_ANY, "Escala")
 		sz_principal.Add(lb_scale, 0, wx.EXPAND, 0)
 
 		self.cb_scale = wx.ComboBox(self.panel_1, wx.ID_ANY, choices= self.scale, style=wx.CB_DROPDOWN)
 		sz_principal.Add(self.cb_scale, 0, 0, 0)
-		self.cb_scale.SetSelection(0)
 
-		lb_formato = wx.StaticText(self.panel_1, wx.ID_ANY, _("formato"))
+		lb_formato = wx.StaticText(self.panel_1, wx.ID_ANY, "formato")
 		sz_principal.Add(lb_formato, 0, wx.EXPAND, 0)
 
 		self.cb_format = wx.ComboBox(self.panel_1, wx.ID_ANY, choices= self.qrFormat, style=wx.CB_DROPDOWN)
 		sz_principal.Add(self.cb_format, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
-		self.cb_format.SetSelection(0)
-		# self.chk_directorio = wx.CheckBox(self.panel_1, wx.ID_ANY, self.path_dir)
-		# self.chk_directorio = wx.CheckListBox(self.panel_1, wx.ID_ANY, choices=[("elija carpeta de destino"),(self.path_dir)])
-		# self.chk_directorio.SetSelection(0)
-		# sz_principal.Add(self.chk_directorio, 0, wx.EXPAND, 0)
+
+		
+		self.chk_directorio = wx.CheckBox(self.panel_1, wx.ID_ANY, "directorio de destino"+str(self.path_dir) ) 
+		sz_principal.Add(self.chk_directorio, 0, wx.EXPAND, 0)
 
 		sz_botones = wx.BoxSizer(wx.HORIZONTAL)
 		sz_principal.Add(sz_botones, 1, wx.EXPAND, 0)
 		
-		self.btn_generar = wx.Button(self.panel_1, wx.ID_ANY, _("Generar&G "))
+		self.btn_generar = wx.Button(self.panel_1, wx.ID_ANY, "Generar&G ")
 		sz_botones.Add(self.btn_generar, 0, wx.BOTTOM, 0)
 
-		self.btn_abrir = wx.Button(self.panel_1, wx.ID_ANY, _("Abrir carpeta&A"))
+		self.btn_abrir = wx.Button(self.panel_1, wx.ID_ANY, "Abrir carpeta&A")
 		sz_botones.Add(self.btn_abrir, 0, 0, 0)
 
 		self.panel_1.SetSizer(sz_principal)
 
+
 		self.Layout()
 		self.Centre()
-		# self.Bind(wx.EVT_CHECKBOX, self.folder)
+		self.Bind(wx.EVT_CHECKBOX, self.folder)
 		self.btn_generar.Bind(wx.EVT_BUTTON,self.generar)
 		self.btn_abrir.Bind(wx.EVT_BUTTON,self.download)
 		# self.chk_directorio.Bind(wx.EVT_BUTTON,self.folder)
@@ -111,7 +108,7 @@ class Principal(wx.Frame):
 				qr.save_png(qrcd)
 			dialogo = wx.MessageDialog(self, 'QR Generado exitosamente!.Desea abrir la carpeta donde se  generó', 'confirmar', wx.YES_NO | wx.NO_DEFAULT)
 			if dialogo.ShowModal() == wx.ID_YES:
-				downloads(self)
+				self.download()
 		else:
 			error=wx.MessageDialog(self, "los campos no se pueden dejar bacíos.", "error")
 			error.ShowModal()
@@ -122,24 +119,17 @@ class Principal(wx.Frame):
 		dlgFol = wx.DirDialog(self, "seleccione carpeta")
 		if dlgFol.ShowModal() == wx.ID_OK:
 			self.path_dir= dlgFol.GetPath()
-			self.chk_directorio.SetValue(self.path_dir)
+			self.chk_directorio.SetLabel("directorio de destino"+str(self.path_dir))
 		dlgFol.Destroy
 
-#
-	def download(self , event):
+	def download(self , *args, **kwargs):
 		path=self.path_dir
 		os.system(f'start {os.path.realpath(path)}')
 
 
-	
-def downloads(self ):
-		path=self.path_dir
-		os.system(f'start {os.path.realpath(path)}')
 
-	
 		# end wxGlade
-
-
+"""
 
 # end of class Principal
 
@@ -157,3 +147,5 @@ if __name__ == "__main__":
 
 	app = MyApp(0)
 	app.MainLoop()
+"""
+
